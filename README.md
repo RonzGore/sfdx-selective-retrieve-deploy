@@ -68,7 +68,7 @@ METADATA TYPES THAT CAN BE PASSED AS AN ARGUMENT AGAINST THE NAME PARAMETER
 
 ```
 
-_See code: [src/commands/gs/source/pull.ts](https://github.com/rohanatgwcs/sfdx-selective-retrieve-deploy/blob/v1.0.1/src/commands/gs/source/pull.ts)_
+_See code: [src/commands/gs/source/pull.ts](https://github.com/rohanatgwcs/sfdx-selective-retrieve-deploy/blob/master/src/commands/gs/source/pull.ts)_
 
 ### `sfdx gs:source:push`
 
@@ -91,9 +91,9 @@ EXAMPLE
 
 ```
 
-_See code: [src/commands/gs/source/push.ts](https://github.com/rohanatgwcs/sfdx-selective-retrieve-deploy/blob/v1.0.1/src/commands/gs/source/push.ts)_
+_See code: [src/commands/gs/source/push.ts](https://github.com/rohanatgwcs/sfdx-selective-retrieve-deploy/blob/master/src/commands/gs/source/push.ts)_
 
-##Motivation behind this plugin:
+## Motivation behind this plugin:
 ``` 
 1. sfdx gs:source:pull
 Selectively pull a specific type of metadata to a directory of your choice. The sfdx force:source:pull command does not give you flexibility regarding what you want to pull and where. 
