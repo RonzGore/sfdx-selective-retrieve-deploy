@@ -1,0 +1,7 @@
+{
+  "pullCommandDescription": "Retrieves specific metadata/s to a sepcified location",
+  "nameFlagDescription": "Name of the component/s to retrieve",
+  "typeFlagDescription": "Type of the components to retrieve, only support one component at a time",
+  "targetdirFlagDescription": "Path of target directory where the component needs to be pulled",
+  "includedirFlagDescription":"If you want to retrieve the directory as well along with the metadata components"
+}

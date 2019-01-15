@@ -1,0 +1,67 @@
+{
+  "name": "@rohanatgwcs/sfdx-selective-retrieve-deploy",
+  "description": "SFDX plugin to selectively retrieve metadata of a particular type from a scratch org to a specified directory and to deploy a particular module in source format to a scratch org.",
+  "version": "1.1.0",
+  "author": "RohanGore",
+  "bugs": "https://github.com/rohanatgwcs/sfdx-selective-retrieve-deploy/issues",
+  "dependencies": {
+    "@oclif/command": "1",
+    "@oclif/config": "1",
+    "@oclif/errors": "1",
+    "@salesforce/command": "^1.0.1",
+    "@salesforce/core": "^1.0.1",
+    "tslib": "1",
+    "shelljs": "^0.8.3",
+    "node-emoji": "^1.8.1",
+    "js2xmlparser": "^3.0.0"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1",
+    "@oclif/plugin-help": "^2",
+    "@oclif/test": "^1",
+    "@salesforce/dev-config": "^1.1.4",
+    "@types/chai": "^4",
+    "@types/mocha": "^5",
+    "@types/node": "^10",
+    "chai": "^4",
+    "globby": "^8",
+    "mocha": "^5",
+    "nyc": "^13",
+    "sinon": "5",
+    "ts-node": "^7",
+    "typescript": "^3.0"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/lib",
+    "/messages",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/rohanatgwcs/sfdx-selective-retrieve-deploy",
+  "keywords": [
+    "sfdx-plugin"
+  ],
+  "license": "MIT",
+  "oclif": {
+    "commands": "./lib/commands",
+    "topics": {
+      "hello": {
+        "description": "Commands to say hello."
+      }
+    },
+    "devPlugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "repository": "rohanatgwcs/sfdx-selective-retrieve-deploy",
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json npm-shrinkwrap.json",
+    "posttest": "tslint -p test -t stylish",
+    "prepare": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme && npm shrinkwrap",
+    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
+    "version": "oclif-dev readme && git add README.md"
+  }
+}
