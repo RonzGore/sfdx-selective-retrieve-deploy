@@ -41,10 +41,11 @@ export default class Pull extends SfdxCommand {
   //their description for the help
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
-    names: flags.array({char: 'n', required: true, description: 'Name of the component/s to retrieve'}),
+    names: flags.array({char: 'n', required: false, description: 'Name of the component/s to retrieve'}),
     type: flags.string({char: 't', required: true, description: 'Type of the components to retrieve, only support one component at a time'}),
     targetdir: flags.string({char: 'd', required: true, description: 'Path of target directory where the component needs to be pulled'}),
-    includedir: flags.boolean({char: 'i', description: 'If you want to retrieve the directory as well along with the metadata components'})
+    includedir: flags.boolean({char: 'i', description: 'If you want to retrieve the directory as well along with the metadata components'}),
+    mdapiformat: flags.boolean({char: 'm', description: 'If you want to retrieve the content in mdapi format'})
   };
 
   //This static variable makes the org username required for the command
@@ -70,11 +71,14 @@ export default class Pull extends SfdxCommand {
     };
 
     packageJSON.types.push({
-      members: this.flags.names,
+      //If no name is passed, set it to * to pull all components of
+      //the type passed as param
+      members: this.flags.names?this.flags.names:'*',
       name: this.flags.type
     });
 
     let packageXMl = jsToXml.parse('Package', packageJSON, options);
+    this.ux.log(packageXMl);
     fs.writeFileSync(`./${pkgDir}/package.xml`, packageXMl);
     let output = shellJS.exec(`sfdx force:mdapi:retrieve -k ${pkgDir}/package.xml -r ./${pkgDir} -w 30 -u ${this.org.getUsername()} --json`);
 
@@ -85,22 +89,43 @@ export default class Pull extends SfdxCommand {
     //Get the list of all the folders inside the newly unzipped folder
     async function getDirectories(path){
         let filesAndDirectories = await fs.readdir(path);
-
         let directories = [];
+
         await Promise.all(
             filesAndDirectories.map(name =>{
                 return fs.stat(path + name)
                 .then(stat =>{
-                    if(stat.isDirectory()) directories.push(name)
+                    if(stat.isDirectory()) {
+                      directories.push(name)
+                    }
                 })
             })
         );
         return directories;
     }
 
+    //convert the name to source formatted name for all the files
+    async function renameFiles(directory, inSourceFormat){
+        console.log('directory', directory);
+        if(inSourceFormat) {
+          let files = await fs.readdir(directory);
+
+          files.forEach(file => {
+            console.log(file);
+            fs.rename(`${directory}/${file}`, `${directory}/${file}-meta.xml`, function(err) {
+              if ( err ) console.log('ERROR: ' + err);
+            });
+          });
+
+        }
+    }
+
+
     let directories = await getDirectories(`${pkgDir}/unpackaged/`);
 
-    //Copy over all the contents from one folder(first one, assuming there would alwyas be one folder)
+    await renameFiles(`${pkgDir}/unpackaged/${directories[0]}`, !this.flags.mdapiformat);
+
+    //Copy over all the contents from one folder(first one, assuming there would always be one folder)
     //to the provided target directory
     let source = this.flags.includedir?`${pkgDir}/unpackaged`:`${pkgDir}/unpackaged/${directories[0]}`;
     fs.copy(source, `${this.flags.targetdir}`)
