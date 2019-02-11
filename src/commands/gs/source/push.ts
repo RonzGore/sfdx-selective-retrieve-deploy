@@ -48,9 +48,6 @@ export default class Push extends SfdxCommand {
   protected static requiresUsername = true;
 
   public async run(): Promise<AnyJson> {
-    console.log(this.flags.modulepath);
-    console.log(this.flags.directorypath);
-    console.log(this.flags.filepath);
 
     if(this.flags.modulepath && this.flags.directorypath ||
         this.flags.modulepath && this.flags.filepath ||
@@ -101,7 +98,7 @@ export default class Push extends SfdxCommand {
       //Print the current working directory
       shellJS.exec('pwd');
       //Delete the temporary SFDX project
-      //shellJS.exec(`rm -rf tempSFDXProject`);
+      shellJS.exec(`rm -rf tempSFDXProject`);
     });
 
     // Return an object to be displayed with --json
