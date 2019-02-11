@@ -32,9 +32,15 @@ export default class Pull extends SfdxCommand {
   public static examples = [
     `sfdx gs:source:pull --type ApexClass --names MyClass1,MyClass2 --targetdir app/main/default/classes
     // retrieves MyClass1 and MyClass2 from an org (sratch/non-scratch) to the provided directory location
-    `,
-    `sfdx gs:source:pull --type Layout --names Layout1 --targetdir app/main/default --includedir
-    // retrieves Layout1 along with the layouts folder from an org (sratch/non-scratch) to the provided directory location
+    i.e app/main/default directory
+
+    sfdx gs:source:pull --type Layout --names Layout1 --targetdir app/main/default --includedir
+        // retrieves Layout1 along with the layouts folder from an org (sratch/non-scratch) to the provided directory
+    location i.e app/main/default directory
+
+    sfdx gs:source:pull --type PermissionSet --targetdir app/main/default --includedir
+        // retrieves all the permission sets along with the PermissionSet folder from an org (sratch/non-scratch) to the provided directory
+    location i.e. app/main/default directory
     `];
 
   //This static variale sets the flags/params for the commands along with

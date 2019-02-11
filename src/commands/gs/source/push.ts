@@ -21,7 +21,13 @@ export default class Push extends SfdxCommand {
 
   public static examples = [
     `sfdx gs:source:push --modulePath app
-    // deploys app module to the target org`
+    //deploys app module to the target org to the default org
+
+    sfdx gs:source:push -filepath app/main/default/permissionsets/MyPermissionSet -u MyTargerOrg
+    //deploys the MyPermissionSet to an org with alias MyTargetOrg
+
+    sfdx gs:source:push -directorypath myFolder/PermissionSets -c -u MyTargetOrg
+    //validates the deployment of all the permission sets from the directory myFolder/PermissionSets on MyTargetOrg`
   ];
 
   //This static variale sets the flags/params for the commands along with
@@ -33,7 +39,9 @@ export default class Push extends SfdxCommand {
     directorypath: flags.string({char: 'd', required: false,
     description: 'path of the directory to be pushed'}),
     filepath: flags.string({char: 'f', required: false,
-    description: 'path of the file to be pushed'})
+    description: 'path of the file to be pushed'}),
+    validate: flags.boolean({char: 'c', required: false,
+    description: 'validate only the push'})
   };
 
   //This static variable makes the org username required for the command
@@ -65,8 +73,10 @@ export default class Push extends SfdxCommand {
       +path.basename(`${this.flags.filepath}`));
     }
 
+    const validateOnly = this.flags.validate?'-c':'';
 
-    //change the working directory to a temporary SFDX project
+
+    //Change the working directory to a temporary SFDX project
     shellJS.cd('tempSFDXProject');
 
     //Create and write the sfdx-project.json to tempSFDXProject
@@ -85,13 +95,13 @@ export default class Push extends SfdxCommand {
       //Convert the source
       shellJS.exec('sfdx force:source:convert -d md-tempModule');
       //Deploy
-      shellJS.exec(`sfdx force:mdapi:deploy --deploydir md-tempModule -c --targetusername ${this.org.getUsername()} --wait 20`);
+      shellJS.exec(`sfdx force:mdapi:deploy --deploydir md-tempModule ${validateOnly} --targetusername ${this.org.getUsername()} --wait 20`);
       //Switch to the parent direcroty
       shellJS.cd('..');
       //Print the current working directory
       shellJS.exec('pwd');
       //Delete the temporary SFDX project
-      shellJS.exec(`rm -rf tempSFDXProject`);
+      //shellJS.exec(`rm -rf tempSFDXProject`);
     });
 
     // Return an object to be displayed with --json
