@@ -4,7 +4,6 @@ import shellJS =  require('shelljs');
 import fs =  require('fs-extra');
 import emoji = require('node-emoji');
 const path = require('path');
-//import path = require('path-parse');
 
 
 // Initialize Messages with the current plugin directory
@@ -41,7 +40,11 @@ export default class Push extends SfdxCommand {
     filepath: flags.string({char: 'f', required: false,
     description: 'path of the file to be pushed'}),
     validate: flags.boolean({char: 'c', required: false,
-    description: 'validate only the push'})
+    description: 'validate only the push'}),
+    dependenciesfile: flags.string({char: 'p', required: false,
+    description: 'path to the sfdx-project.json file'}),
+    includedependencies: flags.boolean({char: 'i', required: false,
+    description: 'deploy dependent modules as well if any'})
   };
 
   //This static variable makes the org username required for the command
@@ -52,15 +55,44 @@ export default class Push extends SfdxCommand {
     if(this.flags.modulepath && this.flags.directorypath ||
         this.flags.modulepath && this.flags.filepath ||
         this.flags.directorypath && this.flags.filepath) {
-      this.ux.log('Only one of the parameters out of modulepath, directoryPath and filepath is allowed');
-      process.exit(1);
+      throw new core.SfdxError(
+        'Only one of the parameters out of modulepath, directoryPath and filepath is allowed'
+      );
+    }
+
+    if(!this.flags.modulepath && !this.flags.directorypath && !this.flags.filepath ) {
+      throw new core.SfdxError(
+        'One of the parameters out of modulepath, directorypath and filepath must be provided'
+      );
+    }
+
+    if(this.flags.includedependencies && !this.flags.dependenciesfile) {
+      throw new core.SfdxError(
+        'Please provide the path to the sfdx-project.json file against the dependenciesfile(p) parameter'
+      );
     }
 
     this.ux.log(emoji.emojify(`:rocket:  Working on it................................... :rocket:`));
 
     fs.ensureDirSync('tempSFDXProject/tempModule/main/default');
     if(this.flags.modulepath) {
-      fs.copySync(`${this.flags.modulepath}/main/default`, 'tempSFDXProject/tempModule/main/default');
+      if(this.flags.includedependencies) {
+        //Reading the sfdx-project.json file based on the location provided as param
+        const packageObj = await fs.readJSON(`${this.flags.dependenciesfile}`);
+        let srcPath = path.dirname(`${this.flags.modulepath}`);
+        //Looping through and copying all the modules in single directory(sfdx format app aka module)
+        for (const element of packageObj.packageDirectories) {
+          console.log(`Copying from ${srcPath}/${element.path}/main/default to tempSFDXProject/tempModule/main/default`);
+          fs.copySync(`${srcPath}/${element.path}/main/default`, `tempSFDXProject/tempModule/main/default`);
+          if(`${srcPath}/${element.path}` === this.flags.modulepath) {
+            break;
+          }
+        }
+      }
+      else {
+        fs.copySync(`${this.flags.modulepath}/main/default`, 'tempSFDXProject/tempModule/main/default');
+      }
+
     }
     else if(this.flags.directorypath) {
       fs.copySync(`${this.flags.directorypath}`, 'tempSFDXProject/tempModule/main/default');

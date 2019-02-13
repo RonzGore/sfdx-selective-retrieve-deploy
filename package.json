@@ -1,7 +1,7 @@
 {
   "name": "@rohanatgwcs/sfdx-selective-retrieve-deploy",
   "description": "SFDX plugin to selectively retrieve metadata of a particular type from a scratch org to a specified directory and to deploy a particular module in source format to a scratch org.",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "author": "RohanGore",
   "bugs": "https://github.com/rohanatgwcs/sfdx-selective-retrieve-deploy/issues",
   "dependencies": {

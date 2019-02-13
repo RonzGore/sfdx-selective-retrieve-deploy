@@ -140,4 +140,10 @@ passing the --mdapiformat(-m) format.
 1. Support for file and folder push/deploy which are not in source format  
 2. Supoort for validating push/deploy
 
+### Version 1.2.2
+Minor fixes: removal of logs and temp folders.
+
+### Version 1.3.0
+Support for sfdx-project.json based simple dependency management
+
 ```
