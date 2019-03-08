@@ -235,8 +235,8 @@ e.g. sfdx gs:source:push -u MyScratchOrg -p config/dependencies.json
 
 ### Version 2.0.0
 Plugin overhaul. A completely new set of commands:
-1. __gs:source:push__ is broken dowm and enhanced to __gs:source:deploy:module__, __gs:source:deploy:dir__ and __gs:source:deploy:cmp__ commands. 
-2. __gs:source:pull becomes __gs:source:retrieve__.
+1. _gs:source:push_ is broken dowm and enhanced to _gs:source:deploy:module_, _gs:source:deploy:dir_ and _gs:source:deploy:cmp_ commands. 
+2. _gs:source:pull becomes _gs:source:retrieve_.
 Read more about them in their respective help sections above. push and pull seems to be confusing as
 these commands do not take care of any source tracking and thus the name push and pull were not doing any justice.
 
